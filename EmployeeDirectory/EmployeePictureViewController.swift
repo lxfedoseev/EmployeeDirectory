@@ -52,6 +52,7 @@ private extension EmployeePictureViewController {
   func configureView() {
     guard let employee = employee else { return }
 
-    employeePictureImageView.image = UIImage(data: employee.picture)
+    employeePictureImageView.image =
+      UIImage(data: employee.picture.picture)
   }
 }

@@ -33,7 +33,7 @@ class DepartmentListViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    items = totalEmployeesPerDepartment()
+    items = totalEmployeesPerDepartmentFast()
   }
 
   // MARK: Navigation
@@ -112,6 +112,34 @@ extension DepartmentListViewController {
 
     return results
   }
+  
+  func totalEmployeesPerDepartmentFast() -> [[String: String]] {
+    //1
+    let expressionDescription = NSExpressionDescription()
+    expressionDescription.name = "headCount"
+    //2
+    expressionDescription.expression =
+      NSExpression(forFunction: "count:",
+                   arguments:[NSExpression(forKeyPath: "department")])
+    //3
+    let fetchRequest: NSFetchRequest<NSDictionary> =
+      NSFetchRequest(entityName: "Employee")
+    fetchRequest.propertiesToFetch =
+      ["department", expressionDescription]
+    fetchRequest.propertiesToGroupBy = ["department"]
+    fetchRequest.resultType = .dictionaryResultType
+    //4
+    var fetchResults: [NSDictionary] = []
+    do {
+      fetchResults =
+        try coreDataStack.mainContext.fetch(fetchRequest)
+    } catch let error as NSError {
+      print("ERROR: \(error.localizedDescription)")
+      return [[String: String]]()
+    }
+    return fetchResults as! [[String: String]]
+  }
+  
 }
 
 // MARK: UITableViewDataSource

@@ -73,7 +73,7 @@ private extension EmployeeDetailViewController {
 
     title = employee.name
 
-    let image = UIImage(data: employee.picture)
+    let image = UIImage(data: employee.pictureThumbnail)
     headShotImageView.image = image
 
     nameLabel.text = employee.name
@@ -87,7 +87,7 @@ private extension EmployeeDetailViewController {
 
     bioTextView.text = employee.about
 
-    salesCountLabel.text = salesCountForEmployee(employee)
+    salesCountLabel.text = salesCountForEmployeeSimple(employee)
   }
 }
 
@@ -109,4 +109,24 @@ extension EmployeeDetailViewController {
       return "0"
     }
   }
+  
+  func salesCountForEmployeeFast(_ employee: Employee) -> String {
+    let fetchRequest: NSFetchRequest<Sale> =
+      NSFetchRequest(entityName: "Sale")
+    let predicate = NSPredicate(format: "employee == %@", employee)
+    
+    fetchRequest.predicate = predicate
+    let context = employee.managedObjectContext!
+    do {
+      let results = try context.count(for: fetchRequest)
+      return "\(results)"
+    } catch let error as NSError {
+      print("Error: \(error.localizedDescription)")
+      return "0" }
+  }
+  
+  func salesCountForEmployeeSimple(_ employee: Employee) -> String {
+    return "\(employee.sales.count)"
+  }
+  
 }

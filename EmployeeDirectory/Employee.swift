@@ -34,7 +34,8 @@ class Employee: NSManagedObject {
   @NSManaged var guid: String
   @NSManaged var name: String
   @NSManaged var phone: String
-  @NSManaged var picture: Data
+  @NSManaged var pictureThumbnail: Data
+  @NSManaged var picture: EmployeeDirectory.EmployeePicture
   @NSManaged var vacationDays: NSNumber
   @NSManaged var sales : Set<Sale>
   
